@@ -13,6 +13,7 @@ DB = Database()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     user_id = update.message.chat_id
+    print(user_id)
     firstname = update.message.chat.first_name
     username = update.message.chat.username
     if not DB.check_user(user_id):
@@ -97,7 +98,8 @@ async def myrequests_inline(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     user_id = update.message.chat_id
-    number = update.message.contact
+    number = update.message.contact.phone_number
+    print(number)
     DB.update_user(user_id, "phone", number)
     await update.message.reply_text(
         text="Введите поток",
