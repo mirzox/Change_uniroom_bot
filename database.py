@@ -6,6 +6,19 @@ class Database:
         self.connection = sqlite3.Connection('db.sqlite3', check_same_thread=False)
         self.cursor = self.connection.cursor()
 
+    def get_lang(self, user_id):
+        query = '''
+                SELECT lang 
+                FROM user
+                WHERE user_id = '{}'
+                LIMIT 1
+        '''.format(user_id)
+        try:
+            lang = self.cursor.execute(query).fetchone()[0]
+            return lang
+        except TypeError:
+            return 'ru'
+
     def check_user(self, user_id):
         query = '''
                SELECT * 
@@ -110,3 +123,13 @@ class Database:
         """.format(user_id)
         result = self.cursor.execute(query).fetchall()
         return result
+
+    def is_user_have_contact(self, user_id):
+        query = """
+            SELECT phone 
+            FROM user
+            WHERE user_id = '{}'
+            LIMIT 1
+        """.format(user_id)
+        result = self.cursor.execute(query).fetchone()
+        return False if result in [None, []] else True
