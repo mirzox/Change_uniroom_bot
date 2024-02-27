@@ -278,6 +278,8 @@ async def reason_written(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     msg_id = update.message.message_id
     data = update.message.text
     lang = DB.get_lang(user_id)
+    user_info = DB.get_user(user_id)
+    phone = user_info[3]
     if data == "⬅️Назад" or data == "⬅️Орқага":
         await context.bot.delete_message(user_id, msg_id - 1)
         await context.bot.delete_message(user_id, msg_id)
@@ -298,7 +300,8 @@ async def reason_written(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     await context.bot.send_message(
         chat_id=int(Config.GROUP_ID),
         text=tx.RESULT_TEXT[lang].format(
-            a=request
+            a=request,
+            phone=phone
         ),
         parse_mode='html',
         reply_markup=mrk.accept_reject_buttons(user_id, request[0])
